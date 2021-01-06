@@ -24,7 +24,7 @@ import org.apache.ibatis.session.TransactionIsolationLevel;
 
 /**
  * Creates {@link Transaction} instances.
- *
+ * 工厂类: 用于创建事务对象
  * @author Clinton Begin
  */
 public interface TransactionFactory {
@@ -32,6 +32,7 @@ public interface TransactionFactory {
   /**
    * Sets transaction factory custom properties.
    * @param props
+   * 设置事务工厂自定义属性
    */
   void setProperties(Properties props);
 
@@ -40,6 +41,7 @@ public interface TransactionFactory {
    * @param conn Existing database connection
    * @return Transaction
    * @since 3.1.0
+   * 从现有的conn连接中创建一个事务
    */
   Transaction newTransaction(Connection conn);
   
@@ -50,6 +52,7 @@ public interface TransactionFactory {
    * @param autoCommit Desired autocommit
    * @return Transaction
    * @since 3.1.0
+   * 从数据源创建一个事务,并且需要提供事务隔离级别,是否自动提交
    */
   Transaction newTransaction(DataSource dataSource, TransactionIsolationLevel level, boolean autoCommit);
 
