@@ -33,12 +33,16 @@ import org.apache.ibatis.io.Resources;
 
 /**
  * @author Clinton Begin
+ * todo reading
  */
 public final class TypeHandlerRegistry {
 
+    /** JDBC类型处理器映射表 */
     private final Map<JdbcType, TypeHandler<?>> JDBC_TYPE_HANDLER_MAP = new EnumMap<JdbcType, TypeHandler<?>>(JdbcType.class);
+    /** 类型处理器映射表 */
     private final Map<Type, Map<JdbcType, TypeHandler<?>>> TYPE_HANDLER_MAP = new HashMap<Type, Map<JdbcType, TypeHandler<?>>>();
     private final TypeHandler<Object> UNKNOWN_TYPE_HANDLER = new UnknownTypeHandler(this);
+    /** 所有的类型处理器 */
     private final Map<Class<?>, TypeHandler<?>> ALL_TYPE_HANDLERS_MAP = new HashMap<Class<?>, TypeHandler<?>>();
 
     public TypeHandlerRegistry() {
