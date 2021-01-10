@@ -1,11 +1,14 @@
 package com.zsj.mybatis.type;
 
+import org.apache.ibatis.type.BigDecimalTypeHandler;
 import org.apache.ibatis.type.IntegerTypeHandler;
 import org.apache.ibatis.type.TypeHandler;
+import org.apache.ibatis.type.TypeReference;
 import org.junit.Test;
 
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
+import java.math.BigDecimal;
 import java.util.Arrays;
 
 
@@ -16,6 +19,7 @@ import java.util.Arrays;
  */
 public class TypeHandlerTest {
 
+    /** 测试获取 IntegerTypeHandler 的参数化类型 */
     @Test
     public void test1()
     {
@@ -24,6 +28,15 @@ public class TypeHandlerTest {
         System.out.println(type);
         Type[] typeArguments = ((ParameterizedType) type).getActualTypeArguments();
         System.out.println(Arrays.toString(typeArguments));
+    }
+
+    /** TypeReference抽象类的作用：getRawType方法 */
+    @Test
+    public void test2()
+    {
+        TypeReference<BigDecimal> typeReference = new BigDecimalTypeHandler();
+        Type rawType = typeReference.getRawType();
+        System.out.println(rawType);
     }
 
 }
