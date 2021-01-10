@@ -34,14 +34,17 @@ import org.apache.ibatis.io.Resources;
 
 /**
  * @author Clinton Begin
+ * 类型别名注册
  */
 public class TypeAliasRegistry {
 
+    /** 别名映射表,自定义的key默认都是小写字母;value为别名对应的类型 */
     private final Map<String, Class<?>> TYPE_ALIASES = new HashMap<String, Class<?>>();
 
     public TypeAliasRegistry() {
         registerAlias("string", String.class);
 
+        // 八大基本数据类型的包装类映射
         registerAlias("byte", Byte.class);
         registerAlias("long", Long.class);
         registerAlias("short", Short.class);
@@ -60,6 +63,7 @@ public class TypeAliasRegistry {
         registerAlias("float[]", Float[].class);
         registerAlias("boolean[]", Boolean[].class);
 
+        // 八大基本数据类型
         registerAlias("_byte", byte.class);
         registerAlias("_long", long.class);
         registerAlias("_short", short.class);
@@ -97,9 +101,15 @@ public class TypeAliasRegistry {
         registerAlias("collection", Collection.class);
         registerAlias("iterator", Iterator.class);
 
+        /** jdbc查询结果集对象也被注册到别名映射表中 */
         registerAlias("ResultSet", ResultSet.class);
     }
 
+    /**
+     *  解析某个别名
+     *      首先从映射表中拿.
+     *      如果不存在,通过ClassLoader加载该类;否则该别名不存在,抛出异常.这种情况别名需要是全限定类名才能找到
+     */
     @SuppressWarnings("unchecked")
     // throws class cast exception as well if types cannot be assigned
     public <T> Class<T> resolveAlias(String string) {
@@ -121,6 +131,7 @@ public class TypeAliasRegistry {
         }
     }
 
+    /** 通过包名的方式注册别名 */
     public void registerAliases(String packageName){
         registerAliases(packageName, Object.class);
     }
@@ -138,6 +149,11 @@ public class TypeAliasRegistry {
         }
     }
 
+    /**
+     *  把一个被Alias注解标识的类注册到别名映射表中
+     *  如果未设置别名的value,默认会将其转换为小写;
+     *  如果设置了,取Alias注解中的value值
+     */
     public void registerAlias(Class<?> type) {
         String alias = type.getSimpleName();
         Alias aliasAnnotation = type.getAnnotation(Alias.class);
