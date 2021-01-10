@@ -37,7 +37,9 @@ public abstract class BaseTypeHandler<T> extends TypeReference<T> implements Typ
 
     @Override
     public void setParameter(PreparedStatement ps, int i, T parameter, JdbcType jdbcType) throws SQLException {
+        // 参数为空
         if (parameter == null) {
+            // 参数虽然为空,但也有类型.
             if (jdbcType == null) {
                 throw new TypeException("JDBC requires that the JdbcType must be specified for all nullable parameters.");
             }
@@ -50,6 +52,7 @@ public abstract class BaseTypeHandler<T> extends TypeReference<T> implements Typ
             }
         } else {
             try {
+                // 参数不为空,由具体处理器执行
                 setNonNullParameter(ps, i, parameter, jdbcType);
             } catch (Exception e) {
                 throw new TypeException("Error setting non null for parameter #" + i + " with JdbcType " + jdbcType + " . " +
@@ -63,6 +66,7 @@ public abstract class BaseTypeHandler<T> extends TypeReference<T> implements Typ
     public T getResult(ResultSet rs, String columnName) throws SQLException {
         T result;
         try {
+            // 具体处理器根据表列名获取值
             result = getNullableResult(rs, columnName);
         } catch (Exception e) {
             throw new ResultMapException("Error attempting to get column '" + columnName + "' from result set.  Cause: " + e, e);
@@ -78,6 +82,7 @@ public abstract class BaseTypeHandler<T> extends TypeReference<T> implements Typ
     public T getResult(ResultSet rs, int columnIndex) throws SQLException {
         T result;
         try {
+            // 具体处理器根据表索引序号获取值
             result = getNullableResult(rs, columnIndex);
         } catch (Exception e) {
             throw new ResultMapException("Error attempting to get column #" + columnIndex+ " from result set.  Cause: " + e, e);
@@ -93,6 +98,7 @@ public abstract class BaseTypeHandler<T> extends TypeReference<T> implements Typ
     public T getResult(CallableStatement cs, int columnIndex) throws SQLException {
         T result;
         try {
+            //
             result = getNullableResult(cs, columnIndex);
         } catch (Exception e) {
             throw new ResultMapException("Error attempting to get column #" + columnIndex+ " from callable statement.  Cause: " + e, e);
