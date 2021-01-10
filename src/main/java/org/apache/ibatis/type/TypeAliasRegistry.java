@@ -184,6 +184,7 @@ public class TypeAliasRegistry {
     }
 
     /**
+     * 获取别名映射表
      * @since 3.2.2
      */
     public Map<String, Class<?>> getTypeAliases() {

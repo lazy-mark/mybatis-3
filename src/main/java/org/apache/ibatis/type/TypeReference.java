@@ -33,7 +33,16 @@ public abstract class TypeReference<T> {
         rawType = getSuperclassTypeParameter(getClass());
     }
 
+    /**
+     * 获取超类的参数化类型. 即T类型
+     */
     Type getSuperclassTypeParameter(Class<?> clazz) {
+        /**
+         *  返回直接继承的父类. 和 getSuperClass 的区别?
+         *      getSuperClass 由于编译擦除,没有显示泛型参数; getGenericSuperclass 包含泛型参数.
+         *      getSuperClass 返回直接超类的Class对象【Object、接口、基本数据类型、void】;
+         *      getGenericSuperclass 返回直接超类的 Type 对象【类、接口、基本数据类型、void】.
+         **/
         Type genericSuperclass = clazz.getGenericSuperclass();
         if (genericSuperclass instanceof Class) {
             // try to climb up the hierarchy until meet something useful
@@ -45,6 +54,10 @@ public abstract class TypeReference<T> {
                     + "Remove the extension or add a type parameter to it.");
         }
 
+        /**
+         *  获取超类的参数化类型
+         *  例如 BigDecimalTypeHandler extends BaseTypeHandler<BigDecimal> 返回的就是 BigDecimal.
+         */
         Type rawType = ((ParameterizedType) genericSuperclass).getActualTypeArguments()[0];
         // TODO remove this when Reflector is fixed to return Types
         if (rawType instanceof ParameterizedType) {
