@@ -98,7 +98,6 @@ public abstract class BaseTypeHandler<T> extends TypeReference<T> implements Typ
     public T getResult(CallableStatement cs, int columnIndex) throws SQLException {
         T result;
         try {
-            //
             result = getNullableResult(cs, columnIndex);
         } catch (Exception e) {
             throw new ResultMapException("Error attempting to get column #" + columnIndex+ " from callable statement.  Cause: " + e, e);
