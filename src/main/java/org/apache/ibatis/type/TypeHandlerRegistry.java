@@ -39,15 +39,18 @@ public final class TypeHandlerRegistry {
 
     /** JDBC类型处理器映射表 */
     private final Map<JdbcType, TypeHandler<?>> JDBC_TYPE_HANDLER_MAP = new EnumMap<JdbcType, TypeHandler<?>>(JdbcType.class);
-    /** 类型处理器映射表 */
+    /** 类型处理器映射表,保存了当前java类型所有能够处理的jdbc类型的类型处理器 */
     private final Map<Type, Map<JdbcType, TypeHandler<?>>> TYPE_HANDLER_MAP = new HashMap<Type, Map<JdbcType, TypeHandler<?>>>();
+    /** 未知类型处理器映射表 */
     private final TypeHandler<Object> UNKNOWN_TYPE_HANDLER = new UnknownTypeHandler(this);
-    /** 所有的类型处理器 */
+    /** 所有的类型处理器,保存了注册过程中所有的java类型和与之对应的类型处理器 */
     private final Map<Class<?>, TypeHandler<?>> ALL_TYPE_HANDLERS_MAP = new HashMap<Class<?>, TypeHandler<?>>();
 
     public TypeHandlerRegistry() {
+        /** 注册java类型的类型处理器 */
         register(Boolean.class, new BooleanTypeHandler());
         register(boolean.class, new BooleanTypeHandler());
+        /** 注册jdbc类型的类型处理器 */
         register(JdbcType.BOOLEAN, new BooleanTypeHandler());
         register(JdbcType.BIT, new BooleanTypeHandler());
 
@@ -125,6 +128,7 @@ public final class TypeHandlerRegistry {
         register(java.sql.Time.class, new SqlTimeTypeHandler());
         register(java.sql.Timestamp.class, new SqlTimestampTypeHandler());
 
+        /** jdk 8 提供了新的特性, mybatis也提供了支持 */
         // mybatis-typehandlers-jsr310
         try {
             register("java.time.Instant", "org.apache.ibatis.type.InstantTypeHandler");
@@ -143,6 +147,7 @@ public final class TypeHandlerRegistry {
         register(char.class, new CharacterTypeHandler());
     }
 
+    /** 判断一个Java类型是否存在类型处理器 */
     public boolean hasTypeHandler(Class<?> javaType) {
         return hasTypeHandler(javaType, null);
     }
@@ -159,6 +164,7 @@ public final class TypeHandlerRegistry {
         return javaTypeReference != null && getTypeHandler(javaTypeReference, jdbcType) != null;
     }
 
+    /** 获取所有的类型处理器 */
     public TypeHandler<?> getMappingTypeHandler(Class<? extends TypeHandler<?>> handlerType) {
         return ALL_TYPE_HANDLERS_MAP.get(handlerType);
     }
@@ -193,6 +199,7 @@ public final class TypeHandlerRegistry {
                 handler = jdbcHandlerMap.get(null);
             }
         }
+        /** 枚举类型的情况 */
         if (handler == null && type != null && type instanceof Class && Enum.class.isAssignableFrom((Class<?>) type)) {
             handler = new EnumTypeHandler((Class<?>) type);
         }
@@ -204,6 +211,7 @@ public final class TypeHandlerRegistry {
         return UNKNOWN_TYPE_HANDLER;
     }
 
+    /** 注册JDBC类型处理器映射表 */
     public void register(JdbcType jdbcType, TypeHandler<?> handler) {
         JDBC_TYPE_HANDLER_MAP.put(jdbcType, handler);
     }
@@ -240,13 +248,16 @@ public final class TypeHandlerRegistry {
     }
 
     // java type + handler
-
+    // 通过java类型、类型处理器实现注册
     public <T> void register(Class<T> javaType, TypeHandler<? extends T> typeHandler) {
         register((Type) javaType, typeHandler);
     }
 
     private <T> void register(Type javaType, TypeHandler<? extends T> typeHandler) {
+        // 获取类型处理器上MappedJdbcTypes的注解
         MappedJdbcTypes mappedJdbcTypes = typeHandler.getClass().getAnnotation(MappedJdbcTypes.class);
+
+        // 类型处理器使用了MappedJdbcTypes注解,遍历注册所有的JdbcType
         if (mappedJdbcTypes != null) {
             for (JdbcType handledJdbcType : mappedJdbcTypes.value()) {
                 register(javaType, handledJdbcType, typeHandler);
@@ -255,6 +266,7 @@ public final class TypeHandlerRegistry {
                 register(javaType, null, typeHandler);
             }
         } else {
+            // 未使用MappedJdbcTypes注解
             register(javaType, null, typeHandler);
         }
     }
@@ -265,19 +277,23 @@ public final class TypeHandlerRegistry {
 
     // java type + jdbc type + handler
 
+    /** 其它注册方式的总和 */
     public <T> void register(Class<T> type, JdbcType jdbcType, TypeHandler<? extends T> handler) {
         register((Type) type, jdbcType, handler);
     }
 
     private void register(Type javaType, JdbcType jdbcType, TypeHandler<?> handler) {
         if (javaType != null) {
+            /** 一个JdbcType只有一个类型处理器与之对应,也就是说我们可以替换原来的类型处理器 */
             Map<JdbcType, TypeHandler<?>> map = TYPE_HANDLER_MAP.get(javaType);
             if (map == null) {
                 map = new HashMap<JdbcType, TypeHandler<?>>();
                 TYPE_HANDLER_MAP.put(javaType, map);
             }
+            /** jdbcType如果原来就存在一个类型处理器,那么会被覆盖掉 */
             map.put(jdbcType, handler);
         }
+        // 所有的类型处理器映射
         ALL_TYPE_HANDLERS_MAP.put(handler.getClass(), handler);
     }
 
@@ -319,8 +335,10 @@ public final class TypeHandlerRegistry {
 
     // Construct a handler (used also from Builders)
 
+    /** 通过一个Java类类型和类型处理器类类型创建一个类型处理器对象 */
     @SuppressWarnings("unchecked")
     public <T> TypeHandler<T> getInstance(Class<?> javaTypeClass, Class<?> typeHandlerClass) {
+        /** jdbc能够处理一个不为null的java类型,也能处理一个为null的java类型 */
         if (javaTypeClass != null) {
             try {
                 Constructor<?> c = typeHandlerClass.getConstructor(Class.class);
@@ -341,6 +359,7 @@ public final class TypeHandlerRegistry {
 
     // scan
 
+    /** 通过包的方式注册 */
     public void register(String packageName) {
         ResolverUtil<Class<?>> resolverUtil = new ResolverUtil<Class<?>>();
         resolverUtil.find(new ResolverUtil.IsA(TypeHandler.class), packageName);
@@ -357,6 +376,7 @@ public final class TypeHandlerRegistry {
 
     /**
      * @since 3.2.2
+     * 获取所有的类型处理器,不可修改
      */
     public Collection<TypeHandler<?>> getTypeHandlers() {
         return Collections.unmodifiableCollection(ALL_TYPE_HANDLERS_MAP.values());

@@ -22,10 +22,11 @@ import java.lang.annotation.Target;
 
 /**
  * @author Eduardo Macarron
+ * 用于指明类型处理器可以处理的哪些JdbcType, 一个类型处理器可以处理多种JdbcType
  */
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.TYPE)
 public @interface MappedJdbcTypes {
-  public JdbcType[] value();
+  JdbcType[] value();
   boolean includeNullJdbcType() default false;
 }

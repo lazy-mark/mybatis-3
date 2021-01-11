@@ -1,9 +1,7 @@
 package com.zsj.mybatis.type;
 
-import org.apache.ibatis.type.BigDecimalTypeHandler;
-import org.apache.ibatis.type.IntegerTypeHandler;
-import org.apache.ibatis.type.TypeHandler;
-import org.apache.ibatis.type.TypeReference;
+import org.apache.ibatis.submitted.typehandler.StringTrimmingTypeHandler;
+import org.apache.ibatis.type.*;
 import org.junit.Test;
 
 import java.lang.reflect.ParameterizedType;
@@ -37,6 +35,13 @@ public class TypeHandlerTest {
         TypeReference<BigDecimal> typeReference = new BigDecimalTypeHandler();
         Type rawType = typeReference.getRawType();
         System.out.println(rawType);
+    }
+
+    @Test
+    public void test3()
+    {
+        TypeHandlerRegistry registry = new TypeHandlerRegistry();
+        registry.register(String.class, StringTrimmingTypeHandler.class);
     }
 
 }
