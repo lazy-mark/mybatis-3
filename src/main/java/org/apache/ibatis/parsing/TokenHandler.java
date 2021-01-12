@@ -17,6 +17,7 @@ package org.apache.ibatis.parsing;
 
 /**
  * @author Clinton Begin
+ * 标记处理器: 对sql中传递的#{}、${}进行替换
  */
 public interface TokenHandler {
   String handleToken(String content);

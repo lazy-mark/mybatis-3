@@ -20,11 +20,14 @@ import javax.sql.DataSource;
 
 /**
  * @author Clinton Begin
+ * 数据源工厂类: mybatis提供了三种方式,jndi、pooled、unpooled的方式.
  */
 public interface DataSourceFactory {
 
-  void setProperties(Properties props);
+    /** 通过配置文件设置数据源 */
+    void setProperties(Properties props);
 
-  DataSource getDataSource();
+    /** 生产一个数据源 */
+    DataSource getDataSource();
 
 }

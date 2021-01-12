@@ -19,12 +19,18 @@ import java.sql.Connection;
 
 /**
  * @author Clinton Begin
+ * 事务隔离级别枚举
  */
 public enum TransactionIsolationLevel {
+  /** 0:默认取决于数据库的事务 */
   NONE(Connection.TRANSACTION_NONE),
+  /** 1:Mybatis层面的读已提交 */
   READ_COMMITTED(Connection.TRANSACTION_READ_COMMITTED),
+  /** 2:Mybatis层面的读未提交 */
   READ_UNCOMMITTED(Connection.TRANSACTION_READ_UNCOMMITTED),
+  /** 3:Mybatis层面的可重复读 */
   REPEATABLE_READ(Connection.TRANSACTION_REPEATABLE_READ),
+  /** 4:Mybatis层面的串行化 */
   SERIALIZABLE(Connection.TRANSACTION_SERIALIZABLE);
 
   private final int level;
