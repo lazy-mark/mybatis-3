@@ -17,6 +17,7 @@ package org.apache.ibatis.type;
 
 import static org.junit.Assert.assertEquals;
 
+import java.lang.reflect.Type;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 
@@ -26,11 +27,13 @@ public class GenericTypeSupportedInHierarchiesTestCase {
 
   @Test
   public void detectsTheGenericTypeTraversingTheHierarchy() {
+    Type rawType = new CustomStringTypeHandler().getRawType();
+    System.out.println(rawType);
     assertEquals(String.class, new CustomStringTypeHandler().getRawType());
   }
 
   /**
-   *
+   * 直接继承StringTypeHandler父类中TypeReference中的rawType
    */
   public static final class CustomStringTypeHandler extends StringTypeHandler {
 

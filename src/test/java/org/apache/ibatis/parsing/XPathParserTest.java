@@ -17,6 +17,7 @@ package org.apache.ibatis.parsing;
 
 import static org.junit.Assert.assertEquals;
 
+import java.io.IOException;
 import java.io.InputStream;
 import java.util.Properties;
 
@@ -43,6 +44,15 @@ public class XPathParserTest {
         System.out.println(node);
         assertEquals("employee/height", node.getPath());
         assertEquals("employee[${id_var}]_height", node.getValueBasedIdentifier());
+    }
+
+    @Test
+    public void testXml() throws IOException {
+        String resource = "resources/nodelet_test.xml";
+        InputStream is = Resources.getResourceAsStream(resource);
+        XPathParser pathParser = new XPathParser(is);
+        XNode xNode = pathParser.evalNode("/employee");
+        System.out.println(xNode);
     }
 
 }

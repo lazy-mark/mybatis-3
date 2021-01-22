@@ -47,7 +47,9 @@ import org.xml.sax.SAXParseException;
 public class XPathParser {
 
     private Document document;
+    /** 生成的解析器将在解析文档时是否对其进行验证 */
     private boolean validation;
+    /** 用于解析要解析的XML文档中存在的实体. */
     private EntityResolver entityResolver;
     private Properties variables;
     private XPath xpath;
@@ -227,20 +229,28 @@ public class XPathParser {
         }
     }
 
+    /** sax包装的输入流,用于读取XML的输入流. 结果返回一个Document */
     private Document createDocument(InputSource inputSource) {
         // important: this must only be called AFTER common constructor
         try {
             DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
+            /** 如果生成的解析器将在解析文档时对其进行验证,为true【基于W3C XML或者DTD】,否则为false */
             factory.setValidating(validation);
 
+            /** 生成的解析器支持命名空间返回true,否则返回false */
             factory.setNamespaceAware(false);
+            /** 在处理过程XML中是否忽略注释 */
             factory.setIgnoringComments(true);
+            /** 如果创建的解析器在解析XML文档时必须消除元素内容中的空白,则为true;否则为true. */
             factory.setIgnoringElementContentWhitespace(false);
+            /** 如果生成的解析器将CDATA节点转换为Text节点并将其附加到相邻的文本节点（如果有）,则为true;否则为false. */
             factory.setCoalescing(false);
+            /** 如果生成的解析器将扩展实体引用节点,则为true;否则为false. */
             factory.setExpandEntityReferences(true);
 
             DocumentBuilder builder = factory.newDocumentBuilder();
             builder.setEntityResolver(entityResolver);
+            /** 设置错误的处理器 */
             builder.setErrorHandler(new ErrorHandler() {
                 @Override
                 public void error(SAXParseException exception) throws SAXException {
@@ -262,6 +272,7 @@ public class XPathParser {
         }
     }
 
+    /** 公共的构造器 */
     private void commonConstructor(boolean validation, Properties variables, EntityResolver entityResolver) {
         this.validation = validation;
         this.entityResolver = entityResolver;

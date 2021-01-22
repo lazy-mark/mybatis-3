@@ -164,7 +164,7 @@ public final class TypeHandlerRegistry {
         return javaTypeReference != null && getTypeHandler(javaTypeReference, jdbcType) != null;
     }
 
-    /** 获取所有的类型处理器 */
+    /** 从所有的类型处理器根据Class获取 */
     public TypeHandler<?> getMappingTypeHandler(Class<? extends TypeHandler<?>> handlerType) {
         return ALL_TYPE_HANDLERS_MAP.get(handlerType);
     }
@@ -199,7 +199,12 @@ public final class TypeHandlerRegistry {
                 handler = jdbcHandlerMap.get(null);
             }
         }
-        /** 枚举类型的情况 */
+        /**
+         * 枚举类型的情况
+         *  instanceof 和 isAssignableForm的区别?
+         *  isAssignableForm从类继承的角度判断,instanceof从实例继承的角度判断.
+         *  instanceof是java关键字,isAssignableForm是Class类中的一个方法.
+         */
         if (handler == null && type != null && type instanceof Class && Enum.class.isAssignableFrom((Class<?>) type)) {
             handler = new EnumTypeHandler((Class<?>) type);
         }
@@ -271,6 +276,7 @@ public final class TypeHandlerRegistry {
         }
     }
 
+    /** 通过类型引用的方式注册 */
     public <T> void register(TypeReference<T> javaTypeReference, TypeHandler<? extends T> handler) {
         register(javaTypeReference.getRawType(), handler);
     }

@@ -28,7 +28,8 @@ import org.xml.sax.SAXException;
 
 /**
  * Offline entity resolver for the MyBatis DTDs
- * 
+ * 离线Mybatis-dtd实体解析器
+ *
  * @author Clinton Begin
  */
 public class XMLMapperEntityResolver implements EntityResolver {
@@ -44,9 +45,12 @@ public class XMLMapperEntityResolver implements EntityResolver {
   private static final String MYBATIS_CONFIG_PUBLIC = "-//mybatis.org//DTD Config 3.0//EN".toUpperCase(Locale.ENGLISH);
   private static final String MYBATIS_CONFIG_SYSTEM = "http://mybatis.org/dtd/mybatis-3-config.dtd".toUpperCase(Locale.ENGLISH);
 
+  /** *mapper.xml命名空间 */
   private static final String MYBATIS_MAPPER_PUBLIC = "-//mybatis.org//DTD Mapper 3.0//EN".toUpperCase(Locale.ENGLISH);
+  /** 在线的mybatis的dtd文件 */
   private static final String MYBATIS_MAPPER_SYSTEM = "http://mybatis.org/dtd/mybatis-3-mapper.dtd".toUpperCase(Locale.ENGLISH);
 
+  /** 离线的mybatis全局配置文件和dtd文件 */
   private static final String MYBATIS_CONFIG_DTD = "org/apache/ibatis/builder/xml/mybatis-3-config.dtd";
   private static final String MYBATIS_MAPPER_DTD = "org/apache/ibatis/builder/xml/mybatis-3-mapper.dtd";
 
@@ -66,11 +70,12 @@ public class XMLMapperEntityResolver implements EntityResolver {
 
   /*
    * Converts a public DTD into a local one
-   * 
+   * 通过 PUBLIC_ID 或者 SYSTEM_ID 获取config全局配置文件或者mapper映射文件
+   *
    * @param publicId The public id that is what comes after "PUBLIC"
    * @param systemId The system id that is what comes after the public id.
    * @return The InputSource for the DTD
-   * 
+   *
    * @throws org.xml.sax.SAXException If anything goes wrong
    */
   @Override

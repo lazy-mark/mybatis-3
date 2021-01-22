@@ -26,6 +26,7 @@ import org.apache.ibatis.session.Configuration;
 
 /**
  * @author Clinton Begin
+ * ResultMap对象
  */
 public class ResultMap {
   private String id;

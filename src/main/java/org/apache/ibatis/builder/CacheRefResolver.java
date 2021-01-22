@@ -19,17 +19,20 @@ import org.apache.ibatis.cache.Cache;
 
 /**
  * @author Clinton Begin
+ * 缓存引用解析器
+ * 委派给了 MapperBuilderAssistant 去处理
  */
 public class CacheRefResolver {
-  private final MapperBuilderAssistant assistant;
-  private final String cacheRefNamespace;
+    private final MapperBuilderAssistant assistant;
+    private final String cacheRefNamespace;
 
-  public CacheRefResolver(MapperBuilderAssistant assistant, String cacheRefNamespace) {
-    this.assistant = assistant;
-    this.cacheRefNamespace = cacheRefNamespace;
-  }
+    public CacheRefResolver(MapperBuilderAssistant assistant, String cacheRefNamespace) {
+        this.assistant = assistant;
+        this.cacheRefNamespace = cacheRefNamespace;
+    }
 
-  public Cache resolveCacheRef() {
-    return assistant.useCacheRef(cacheRefNamespace);
-  }
+    /** 真正的解析缓存的还是MapperBuilderAssistant */
+    public Cache resolveCacheRef() {
+        return assistant.useCacheRef(cacheRefNamespace);
+    }
 }

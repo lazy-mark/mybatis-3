@@ -143,6 +143,7 @@ public class TypeAliasRegistry {
         for(Class<?> type : typeSet){
             // Ignore inner classes and interfaces (including package-info.java)
             // Skip also inner classes. See issue #6
+            /** type.isAnonymousClass()非匿名内部类return真 */
             if (!type.isAnonymousClass() && !type.isInterface() && !type.isMemberClass()) {
                 registerAlias(type);
             }
