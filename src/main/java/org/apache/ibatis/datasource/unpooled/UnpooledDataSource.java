@@ -203,7 +203,6 @@ public class UnpooledDataSource implements DataSource {
 
     private Connection doGetConnection(Properties properties) throws SQLException {
         initializeDriver();
-        /** JDBC中 */
         Connection connection = DriverManager.getConnection(url, properties);
         configureConnection(connection);
         return connection;
