@@ -90,6 +90,7 @@ public class XMLConfigBuilder extends BaseBuilder {
     }
 
     public Configuration parse() {
+        // 防止重新解析,保证配置文件只解析一次
         if (parsed) {
             throw new BuilderException("Each XMLConfigBuilder can only be used once.");
         }
@@ -233,6 +234,14 @@ public class XMLConfigBuilder extends BaseBuilder {
         }
     }
 
+    /**
+     * 解析properties节点
+     * 1.解析properties节点中的所有子节点
+     * 2.解析properties节点中的resource属性,如果存在，保存到1中
+     * 3.解析properties节点中的url属性,如果存在，保存到1中
+     * 4.将1中的properties保存到XPathParse对象中
+     * 5.将1中的properties保存到Configuration对象中
+     */
     private void propertiesElement(XNode context) throws Exception {
         if (context != null) {
             Properties defaults = context.getChildrenAsProperties();
@@ -250,6 +259,7 @@ public class XMLConfigBuilder extends BaseBuilder {
             if (vars != null) {
                 defaults.putAll(vars);
             }
+            // why? 保存variables
             parser.setVariables(defaults);
             configuration.setVariables(defaults);
         }

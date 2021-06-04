@@ -33,6 +33,7 @@ import org.apache.ibatis.transaction.managed.ManagedTransactionFactory;
 
 /**
  * @author Clinton Begin
+ * @description: 普通的一次请求，线程不安全，线程安全详见SqlSessionManager
  */
 public class DefaultSqlSessionFactory implements SqlSessionFactory {
 

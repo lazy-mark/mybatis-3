@@ -55,7 +55,7 @@ public class XMLMapperBuilder extends BaseBuilder {
 
     private XPathParser parser;
     private MapperBuilderAssistant builderAssistant;
-    /** sql片段,在xml中 <sql></sql>的片段,key为mapper#namespace + sql#id,key为 */
+    /** sql片段,在xml中 <sql></sql>的片段,key为mapper#namespace + sql#id */
     private Map<String, XNode> sqlFragments;
     /** <mapper resource="org/apache/ibatis/builder/AuthorMapper.xml"/>中配置的resource */
     private String resource;

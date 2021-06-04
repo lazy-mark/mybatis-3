@@ -34,6 +34,7 @@ import org.apache.ibatis.reflection.ExceptionUtil;
 public class SqlSessionManager implements SqlSessionFactory, SqlSession {
 
   private final SqlSessionFactory sqlSessionFactory;
+  /** CRUD委托给代理对象执行，代理对象是DefaultSqlSession */
   private final SqlSession sqlSessionProxy;
 
   private ThreadLocal<SqlSession> localSqlSession = new ThreadLocal<SqlSession>();
@@ -110,6 +111,7 @@ public class SqlSessionManager implements SqlSessionFactory, SqlSession {
     return this.localSqlSession.get() != null;
   }
 
+  /** 返回的是DefaultSqlSession，用于执行CRUD */
   @Override
   public SqlSession openSession() {
     return sqlSessionFactory.openSession();
@@ -328,6 +330,8 @@ public class SqlSessionManager implements SqlSessionFactory, SqlSession {
 
     @Override
     public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
+      // 从本地线程中获取获取SqlSession,使用SqlSessionManager时并不会向本地线程中放置sqlSession,
+      // 此时sqlSession实例为null,除非启用了startManagedSession()
       final SqlSession sqlSession = SqlSessionManager.this.localSqlSession.get();
       if (sqlSession != null) {
         try {
@@ -336,6 +340,7 @@ public class SqlSessionManager implements SqlSessionFactory, SqlSession {
           throw ExceptionUtil.unwrapThrowable(t);
         }
       } else {
+        // 通过SqlSessionFactory获取SqlSession
         final SqlSession autoSqlSession = openSession();
         try {
           final Object result = method.invoke(autoSqlSession, args);
