@@ -19,35 +19,37 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 
 public class DefaultReflectorFactory implements ReflectorFactory {
-  private boolean classCacheEnabled = true;
-  private final ConcurrentMap<Class<?>, Reflector> reflectorMap = new ConcurrentHashMap<Class<?>, Reflector>();
+    // 开启缓存开关
+    private boolean classCacheEnabled = true;
+    private final ConcurrentMap<Class<?>, Reflector> reflectorMap = new ConcurrentHashMap<Class<?>, Reflector>();
 
-  public DefaultReflectorFactory() {
-  }
-
-  @Override
-  public boolean isClassCacheEnabled() {
-    return classCacheEnabled;
-  }
-
-  @Override
-  public void setClassCacheEnabled(boolean classCacheEnabled) {
-    this.classCacheEnabled = classCacheEnabled;
-  }
-
-  @Override
-  public Reflector findForClass(Class<?> type) {
-    if (classCacheEnabled) {
-            // synchronized (type) removed see issue #461
-      Reflector cached = reflectorMap.get(type);
-      if (cached == null) {
-        cached = new Reflector(type);
-        reflectorMap.put(type, cached);
-      }
-      return cached;
-    } else {
-      return new Reflector(type);
+    public DefaultReflectorFactory() {
     }
-  }
+
+    @Override
+    public boolean isClassCacheEnabled() {
+        return classCacheEnabled;
+    }
+
+    @Override
+    public void setClassCacheEnabled(boolean classCacheEnabled) {
+        this.classCacheEnabled = classCacheEnabled;
+    }
+
+    @Override
+    public Reflector findForClass(Class<?> type) {
+        if (classCacheEnabled) {
+            // 解释这个issue：https://posts.careerengine.us/p/60b78d8802dbfc2967b7a623
+            // synchronized (type) removed see issue #461
+            Reflector cached = reflectorMap.get(type);
+            if (cached == null) {
+                cached = new Reflector(type);
+                reflectorMap.put(type, cached);
+            }
+            return cached;
+        } else {
+            return new Reflector(type);
+        }
+    }
 
 }

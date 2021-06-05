@@ -134,6 +134,7 @@ public class XMLConfigBuilder extends BaseBuilder {
     }
 
     /**
+     * 解析 configuration节点下的 settings 节点
      * <settings>
      *     <setting name="" value=""></setting>
      * </settings>

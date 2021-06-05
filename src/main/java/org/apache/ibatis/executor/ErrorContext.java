@@ -17,6 +17,7 @@ package org.apache.ibatis.executor;
 
 /**
  * @author Clinton Begin
+ * 异常日志上下文
  */
 public class ErrorContext {
 
@@ -24,11 +25,20 @@ public class ErrorContext {
   private static final ThreadLocal<ErrorContext> LOCAL = new ThreadLocal<ErrorContext>();
 
   private ErrorContext stored;
+  /**
+   * 异常是由谁在做什么的时候在哪个资源文件中发生的，执行的 SQL 是哪个，以及 java 详细的异常信息
+   */
+  // 存储异常在那个文件
   private String resource;
+  // 存储异常是做什么操作时发生的
   private String activity;
+  // 存储哪个对象操作时发生异常
   private String object;
+  // 存储异常的概览信息
   private String message;
+  // 存储发生日常的 SQL 语句
   private String sql;
+  // 存储详细的 Java 异常日志
   private Throwable cause;
 
   private ErrorContext() {
@@ -87,6 +97,7 @@ public class ErrorContext {
     return this;
   }
 
+  // 一定要确保在执行完毕后清空ThreadLocal，避免产生意料之外的问题
   public ErrorContext reset() {
     resource = null;
     activity = null;
@@ -98,6 +109,7 @@ public class ErrorContext {
     return this;
   }
 
+  // Mybatis异常日志的核心
   @Override
   public String toString() {
     StringBuilder description = new StringBuilder();

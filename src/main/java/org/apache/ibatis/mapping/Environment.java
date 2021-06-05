@@ -21,7 +21,16 @@ import org.apache.ibatis.transaction.TransactionFactory;
 
 /**
  * @author Clinton Begin
- * 建造者模式: Configuration下的环境配置
+ * Configuration下的环境配置,属性包括xml中的节点
+ * <environment id="development">
+ *     <transactionManager type="JDBC" />
+ *     <dataSource type="POOLED">
+ *         <property name="driver" value="${jdbc.class}" />
+ *         <property name="url" value="${jdbc.url}" />
+ *         <property name="username" value="${jdbc.username}" />
+ *         <property name="password" value="${jdbc.password}" />
+ *     </dataSource>
+ * </environment>
  */
 public final class Environment {
     private final String id;
@@ -49,6 +58,7 @@ public final class Environment {
         private TransactionFactory transactionFactory;
         private DataSource dataSource;
 
+        /** id为必填信息,其它字段非必须 */
         public Builder(String id) {
             this.id = id;
         }

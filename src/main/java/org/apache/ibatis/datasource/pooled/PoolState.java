@@ -20,12 +20,15 @@ import java.util.List;
 
 /**
  * @author Clinton Begin
+ * 连接池状态
  */
 public class PoolState {
 
   protected PooledDataSource dataSource;
 
+  // 存储空闲连接
   protected final List<PooledConnection> idleConnections = new ArrayList<PooledConnection>();
+  // 存储活跃连接
   protected final List<PooledConnection> activeConnections = new ArrayList<PooledConnection>();
   protected long requestCount = 0;
   protected long accumulatedRequestTime = 0;
@@ -44,10 +47,12 @@ public class PoolState {
     return requestCount;
   }
 
+  // 获取平均请求时间
   public synchronized long getAverageRequestTime() {
     return requestCount == 0 ? 0 : accumulatedRequestTime / requestCount;
   }
 
+  // 获取平均等待时间
   public synchronized long getAverageWaitTime() {
     return hadToWaitCount == 0 ? 0 : accumulatedWaitTime / hadToWaitCount;
 
@@ -74,10 +79,12 @@ public class PoolState {
   }
 
 
+  // 获取空闲连接数量
   public synchronized int getIdleConnectionCount() {
     return idleConnections.size();
   }
 
+  // 获取活跃连接数量
   public synchronized int getActiveConnectionCount() {
     return activeConnections.size();
   }

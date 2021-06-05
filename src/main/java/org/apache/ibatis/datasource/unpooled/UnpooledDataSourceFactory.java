@@ -26,7 +26,7 @@ import org.apache.ibatis.reflection.SystemMetaObject;
 
 /**
  * @author Clinton Begin
- * 生产未有数据库连接池的工厂
+ * 不使用数据库连接池的工厂
  */
 public class UnpooledDataSourceFactory implements DataSourceFactory {
 
