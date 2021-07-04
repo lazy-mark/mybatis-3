@@ -38,7 +38,53 @@ public final class PropertyCopier {
           // Nothing useful to do, will only fail on final fields, which will be ignored.
         }
       }
+      // why? 先拷贝子类后拷贝父类
       parent = parent.getSuperclass();
+    }
+  }
+
+  public static void main(String[] args) {
+    User user = new User();
+    user.setA(1);
+    user.setB(1);
+    user.setC(1);
+    User u = new User();
+    PropertyCopier.copyBeanProperties(User.class, user, u);
+    System.out.println(u);
+  }
+
+  public static class User {
+    private int a;
+    private int b;
+    private int c;
+
+    public void setA(int a) {
+      this.a = a;
+    }
+
+    public void setB(int b) {
+      this.b = b;
+    }
+
+    public void setC(int c) {
+      this.c = c;
+    }
+
+    public int getA() {
+      return a;
+    }
+
+    public int getB() {
+      return b;
+    }
+
+    public int getC() {
+      return c;
+    }
+
+    @Override
+    public String toString() {
+      return "User{" + "a=" + a + ", b=" + b + ", c=" + c + '}';
     }
   }
 

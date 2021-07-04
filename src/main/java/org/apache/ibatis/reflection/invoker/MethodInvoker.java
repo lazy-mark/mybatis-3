@@ -29,6 +29,7 @@ public class MethodInvoker implements Invoker {
   public MethodInvoker(Method method) {
     this.method = method;
 
+    // length==1 -> setter
     if (method.getParameterTypes().length == 1) {
       type = method.getParameterTypes()[0];
     } else {

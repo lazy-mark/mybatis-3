@@ -79,6 +79,9 @@ public class FifoCache implements Cache {
     return null;
   }
 
+  /**
+   * 回收算法：淘汰靠前次添加的元素，保留新添加的元素
+   */
   private void cycleKeyList(Object key) {
     keyList.addLast(key);
     if (keyList.size() > size) {
